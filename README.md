@@ -3,7 +3,7 @@
 ## 🎥 Project Demo
 **Automated Triage & Response in Action (Wait for video to load):**
 
-[PASTE YOUR GENERATED VIDEO LINK HERE]
+### 🎬 [Click Here to Watch the Demo Video](./SOC%20Project.mp4)
 
 ## 📝 Project Overview
 This project simulates a corporate SOC environment handling high-volume alerts. I engineered a solution to automate the Triage phase, which typically consumes 40% of an analyst's day. By integrating **Splunk Enterprise** (Detection) with **Jira** (Response) via a custom **Python Middleware**, I achieved fully automated Ticket creation and closure.
