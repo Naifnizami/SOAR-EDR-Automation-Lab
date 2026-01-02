@@ -1,34 +1,70 @@
-# 🛡️ SOAR-EDR Automation Lab: Splunk ➡️ Jira Integration
+# 🛡️ AI-Powered SOAR Engine: Splunk ➡️ Jira ➡️ Agno (Llama 3)
+> **Agentic Security Incident Response & Threat Enrichment Pipeline**
 
-## 🎥 Project Demo
-**Automated Triage & Response in Action (Wait for video to load):**
+## 🎥 Project Demo (V3 Architecture)
+**[CLICK HERE TO WATCH THE DEMO VIDEO](PASTE_YOUR_EXISTING_VIDEO_LINK_HERE)**
 
-### 🎬 [Click Here to Watch the Demo Video](./SOC%20Project.mp4)
-*(Note: For the best view of terminal commands, we recommend downloading the raw video file using the 'Download' button on the next page).*
+> **⚠️ NOTE: V4 AI Upgrade Released!**
+> The video above demonstrates the V3 Automation Logic (Auto-Close vs Escalate). 
+> **This repository has since been upgraded to V4**, which integrates an **AI Agent (Agno/Phidata + Groq)** to perform intelligent OSINT investigations on threat actors.
+> *A new demo video showcasing the AI Agent's reasoning capabilities is coming soon.*
+
+---
 
 ## 📝 Project Overview
-This project simulates a corporate SOC environment handling high-volume alerts. I engineered a solution to automate the Triage phase, which typically consumes 40% of an analyst's day. By integrating **Splunk Enterprise** (Detection) with **Jira** (Response) via a custom **Python Middleware**, I achieved fully automated Ticket creation and closure.
+This project evolves the traditional SOC playbook from "Automation" to "Agentic Intelligence."
 
-### ⚡ Key Capabilities
-*   **Ingestion:** Python Flask listener captures Webhooks from Splunk in real-time.
-*   **Enrichment:** Middleware extracts attacker IPs using Regex (`src_ip`) and parses log payloads.
-*   **Decision Logic:** 
-    *   **False Positive:** If IP is in `Whitelist` (e.g. Authorized Scanners), the ticket is created and **Auto-Closed**.
-    *   **True Positive:** If IP is unauthorized, the ticket is created with **High Priority** and Analyst assignment.
-*   **Loop Prevention:** Optimized Splunk Search scheduling (Cron `-1m@m`) to eliminate duplicate alert firing.
+Originally built to handle high-volume brute-force alerts from **Splunk Enterprise**, the engine uses a **Python Middleware** to ingest Webhooks. In **Version 4**, I integrated an autonomous AI Agent (**Agno/Llama-3**) to act as a Tier 1 Analyst. The Agent actively investigates source IPs, determines context (Private vs Public network), scans for threat reputation, and writes a human-readable investigation report directly into the **Jira** ticket.
 
-## 🏗️ Architecture Flow
+### 🧠 V4.0 Agentic Capabilities
+*   **🤖 AI Analyst Integration:** Utilizes **Agno (formerly Phidata)** running the **Llama-3-70b** model via **Groq LPU** for sub-second inference.
+*   **🔍 Autonomous Investigation:** The Agent distinguishes between internal authorized scans (Private IPs) and external threats. It performs web searches (DuckDuckGo) to validate reputation.
+*   **📝 Natural Language Reporting:** Instead of dumping raw JSON logs, the system creates Jira tickets with a written "Analyst Report" summarizing the findings.
+
+### ⚡ Core Automation Features
+*   **Self-Healing Triage:** False Positives (Whitelist/Internal IPs) are auto-ticketed and immediately transitioned to **DONE** (Closed) to prevent analyst fatigue.
+*   **Loop Prevention:** Splunk alerting optimized with precise cron scheduling (`-1m@m`) to eliminate duplicate alerts for the same event.
+
+## 🏗️ Architecture Flow (V4)
 ```mermaid
 graph TD
-    A[Attacker/Scanner] -->|SSH Brute Force| B(Kali Linux Logs)
-    B -->|Monitor| C{Splunk Enterprise}
-    C -->|Trigger Alert| D[Python Middleware]
+    A[Attacker] -->|SSH Brute Force| B(Kali Linux Logs)
+    B -->|Splunk Monitor| C{Splunk Enterprise}
+    C -->|Webhook Alert| D[Python SOAR Engine]
     
-    subgraph "Logic Engine"
-        D --> E{IP Whitelisted?}
-        E -- Yes --> F[Action: Auto-Close]
-        E -- No --> G[Action: Escalate Severity]
+    subgraph "The AI Brain (Agno + Groq)"
+        D -->|Send IP & Context| E{AI Agent (Llama 3)}
+        E -->|Reasoning Process| F[Check Context / OSINT]
+        F -->|Return Analysis| D
     end
     
-    F -->|API POST| H[Jira Ticket: DONE]
-    G -->|API POST| I[Jira Ticket: TO DO]
+    D -- Analysis = Safe --> G[Auto-Close Ticket]
+    D -- Analysis = Threat --> H[Escalate to High Priority]
+    
+    G -->|API| I[Jira Board: DONE]
+    H -->|API + AI Report| J[Jira Board: TO DO]
+
+🛠️ Tech Stack
+SIEM: Splunk Enterprise 10.x
+AI Framework: Agno (Phidata)
+LLM Engine: Groq API (Llama-3.3-70b-versatile)
+Development: Python 3 (Flask, Requests, RegEx)
+Infrastructure: Kali Linux, Jira Cloud API
+🔧 Installation & Usage
+Clone the Repo:
+code
+Bash
+git clone https://github.com/Naifnizami/SOAR-EDR-Automation-Lab.git
+cd SOAR-EDR-Automation-Lab
+Install Requirements:
+code
+Bash
+pip install -r requirements.txt
+Configure Credentials:
+Set your JIRA_API_TOKEN and GROQ_API_KEY as environment variables (Recommended) or update the soar_engine.py / ai_analyst.py config sections locally.
+Run the Engine:
+code
+Bash
+python3 soar_engine.py
+Configure Splunk: Point Webhook action to http://<your-ip>:5000/webhook.
+Developed by Naif Nizami - 2026
