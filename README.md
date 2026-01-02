@@ -2,7 +2,7 @@
 > **Agentic Security Incident Response & Threat Enrichment Pipeline**
 
 ## 🎥 Project Demo (V3 Architecture)
-**[CLICK HERE TO WATCH THE DEMO VIDEO](PASTE_YOUR_EXISTING_VIDEO_LINK_HERE)**
+**[CLICK HERE TO WATCH THE DEMO VIDEO](https://github.com/Naifnizami/SOAR-EDR-Automation-Lab/blob/main/SOC%20Project.mp4)**
 
 > **⚠️ NOTE: V4 AI Upgrade Released!**
 > The video above demonstrates the V3 Automation Logic (Auto-Close vs Escalate). 
@@ -25,6 +25,33 @@ Originally built to handle high-volume brute-force alerts from **Splunk Enterpri
 *   **Self-Healing Triage:** False Positives (Whitelist/Internal IPs) are auto-ticketed and immediately transitioned to **DONE** (Closed) to prevent analyst fatigue.
 *   **Loop Prevention:** Splunk alerting optimized with precise cron scheduling (`-1m@m`) to eliminate duplicate alerts for the same event.
 
+## 🛠️ Tech Stack
+*   **SIEM:** Splunk Enterprise 10.x
+*   **AI Framework:** Agno (Phidata)
+*   **LLM Engine:** Groq API (Llama-3.3-70b-versatile)
+*   **Development:** Python 3 (Flask, Requests, RegEx)
+*   **Infrastructure:** Kali Linux, Jira Cloud API
+
+## 🔧 Installation & Usage
+1.  **Clone the Repo:**
+    ```bash
+    git clone https://github.com/Naifnizami/SOAR-EDR-Automation-Lab.git
+    cd SOAR-EDR-Automation-Lab
+    ```
+2.  **Install Requirements:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  **Configure Credentials:**
+    *   Set your `JIRA_API_TOKEN` and `GROQ_API_KEY` as environment variables (Recommended) or update the `soar_engine.py` / `ai_analyst.py` config sections locally.
+4.  **Run the Engine:**
+    ```bash
+    python3 soar_engine.py
+    ```
+5.  **Configure Splunk:** Point Webhook action to `http://<your-ip>:5000/webhook`.
+
+---
+
 ## 🏗️ Architecture Flow (V4)
 ```mermaid
 graph TD
@@ -32,39 +59,14 @@ graph TD
     B -->|Splunk Monitor| C{Splunk Enterprise}
     C -->|Webhook Alert| D[Python SOAR Engine]
     
-    subgraph "The AI Brain (Agno + Groq)"
-        D -->|Send IP & Context| E{AI Agent (Llama 3)}
+    subgraph AIBrain [The AI Brain - Agno + Groq]
+        D -->|Send IP & Context| E{"AI Agent (Llama 3)"}
         E -->|Reasoning Process| F[Check Context / OSINT]
         F -->|Return Analysis| D
     end
     
-    D -- Analysis = Safe --> G[Auto-Close Ticket]
-    D -- Analysis = Threat --> H[Escalate to High Priority]
+    D -- "Analysis: Safe" --> G[Auto-Close Ticket]
+    D -- "Analysis: Threat" --> H[Escalate to High Priority]
     
     G -->|API| I[Jira Board: DONE]
     H -->|API + AI Report| J[Jira Board: TO DO]
-
-🛠️ Tech Stack
-SIEM: Splunk Enterprise 10.x
-AI Framework: Agno (Phidata)
-LLM Engine: Groq API (Llama-3.3-70b-versatile)
-Development: Python 3 (Flask, Requests, RegEx)
-Infrastructure: Kali Linux, Jira Cloud API
-🔧 Installation & Usage
-Clone the Repo:
-code
-Bash
-git clone https://github.com/Naifnizami/SOAR-EDR-Automation-Lab.git
-cd SOAR-EDR-Automation-Lab
-Install Requirements:
-code
-Bash
-pip install -r requirements.txt
-Configure Credentials:
-Set your JIRA_API_TOKEN and GROQ_API_KEY as environment variables (Recommended) or update the soar_engine.py / ai_analyst.py config sections locally.
-Run the Engine:
-code
-Bash
-python3 soar_engine.py
-Configure Splunk: Point Webhook action to http://<your-ip>:5000/webhook.
-Developed by Naif Nizami - 2026
