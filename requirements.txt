@@ -1,2 +1,5 @@
 flask
 requests
+agno
+groq
+duckduckgo-search
