@@ -2,8 +2,9 @@ from flask import Flask, request, jsonify
 import requests
 import json
 import re
+import os
 from datetime import datetime
-import ai_analyst  # <--- IMPORTING THE BRAIN
+from . import agent_logic as ai_analyst  # <--- IMPORTING THE BRAIN
 
 app = Flask(__name__)
 

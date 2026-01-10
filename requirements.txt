@@ -2,4 +2,7 @@ flask
 requests
 agno
 groq
-duckduckgo-search
+python-dotenv
+ddgs
+lxml_html_clean
+gunicorn
