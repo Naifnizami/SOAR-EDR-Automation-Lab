@@ -2,7 +2,7 @@
 
 A containerized Security Orchestration, Automation, and Response (SOAR) microservice that acts as a **Tier-1 SOC Analyst**. It integrates **Splunk** (SIEM), **Groq/Llama-3** (AI Analysis), and **Jira** (Ticketing) into a fully automated SOC pipeline.
 
-This is not just a script—this is a **deployment-ready Dockerized application** served via Gunicorn.
+This is not just a script, this is a **deployment-ready Dockerized application** served via Gunicorn.
 
 ---
 
