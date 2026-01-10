@@ -115,7 +115,7 @@ graph TD
         Splunk[🔥 Splunk SIEM] -->|HTTP POST Alert| DockerPort[Host Port: 5000]
     end
 
-    subgraph Docker_Container [🐳 Docker Container: sec-agent:prod]
+    subgraph Docker_Container [🐳 Docker Production Env]
         DockerPort -->|Map Port| GunicornMaster[⚙️ Gunicorn Master]
         
         subgraph Workers [🧵 4 Parallel Worker Processes]
